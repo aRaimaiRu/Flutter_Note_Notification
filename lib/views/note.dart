@@ -21,8 +21,6 @@ class _NoteState extends State<Note> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
 
-  bool isSun = false;
-
   // List<Map<String, String>> get _notes => NoteInheritedWidget.of(context).notes;
 
   @override
@@ -67,12 +65,16 @@ class _NoteState extends State<Note> {
                 _NoteButton("Save", Colors.amberAccent, () async {
                   final title = _titleController.text;
                   final text = _textController.text;
+                  int hour = key.currentState.timevalue.hour;
+                  int min = key.currentState.timevalue.minute;
+                  List dayList = ckey.currentState.dayList;
 
-                  ///how to get time?
-                  print(
-                      "key.currentState.timevalue = ${key.currentState.timevalue}");
-                  NextHourAndMin(key.currentState.timevalue.hour,
-                      key.currentState.timevalue.minute, title, text);
+                  if (dayList.contains(true)) {
+                    scheduleWeeklyAnyDayTimeNotification(
+                        dayList, hour, min, title, text);
+                  } else {
+                    NextHourAndMin(hour, min, title, text);
+                  }
                   if (widget.noteMode == NoteMode.Adding) {
                     NoteProvider.insertNote({'title': title, 'text': text});
                   } else if (widget.noteMode == NoteMode.Editing) {
@@ -85,7 +87,10 @@ class _NoteState extends State<Note> {
 
                   Navigator.pop(context);
                 }),
-                _NoteButton("Discard", Colors.grey, () {}),
+                _NoteButton("Discard", Colors.grey, () {
+                  _textController.clear();
+                  _titleController.clear();
+                }),
                 _NoteButton("Delete", Colors.redAccent, () {
                   NoteProvider.deleteNote(widget.note['id']);
                   Navigator.pop(context);

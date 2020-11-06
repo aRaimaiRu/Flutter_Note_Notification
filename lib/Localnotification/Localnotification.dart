@@ -5,43 +5,60 @@ import 'package:timezone/timezone.dart' as tz;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-Future<void> scheduleWeeklyAnyDayTimeNotification() async {
-  tz.TZDateTime time = nextInstanceDayAndHour(5, 0, 0);
-  String stime = time.toString();
-  String mytime = stime.splitMapJoin((new RegExp('[0-9]')),
-      onMatch: (m) => '${m.group(0)}', onNonMatch: (n) => '*'); // *shoots*
-  //String myid = stime.substring(0, 4) + stime.substring(5, 7)+stime.substring(startIndex);
-  print("time = $mytime");
-  await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'weekly scheduled notification title',
-      'weekly scheduled notification body',
-      nextInstanceDayAndHour(5, 0, 0),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-            'weekly notification channel id',
-            'weekly notification channel name',
-            'weekly notificationdescription'),
-      ),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+List indexToDay = [
+  null,
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thrusday",
+  "Friday",
+  "Saturday",
+  "Sunday"
+];
+Future<void> scheduleWeeklyAnyDayTimeNotification(
+    List day, int hour, int min, String title, String text) async {
+  tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
+  for (int i = 0; i < day.where((item) => item == false).length; i++) {
+    schedule = _getDatebyDayList(day, schedule);
+    if (schedule == null) {
+      continue;
+    }
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        schedule.hashCode,
+        '${title}',
+        '${text}',
+        schedule,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+              'weekly notification channel id',
+              'weekly notification channel name',
+              'weekly notificationdescription'),
+        ),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+        payload: "schedule every :" +
+            indexToDay[schedule.weekday] +
+            schedule.hour.toString() +
+            ":" +
+            schedule.minute.toString());
+  }
 }
 
 Future<void> NextHourAndMin(
     int hour, int min, String title, String body) async {
   tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
-  final List<PendingNotificationRequest> pendingNotificationRequests =
-      await flutterLocalNotificationsPlugin.pendingNotificationRequests();
   await flutterLocalNotificationsPlugin.zonedSchedule(
     schedule.hashCode,
     '${title}',
     '${body}',
     schedule,
     const NotificationDetails(
-      android: AndroidNotificationDetails('daily notification channel id',
-          'daily notification channel name', 'daily notification description'),
+      android: AndroidNotificationDetails(
+          'NextHourMin notification channel id',
+          'NextHourMin notification channel name',
+          'NextHourMin notification description'),
     ),
     androidAllowWhileIdle: true,
     uiLocalNotificationDateInterpretation:
@@ -70,4 +87,57 @@ tz.TZDateTime nextInstanceOfanytime(int hour, int min) {
     scheduledDate = scheduledDate.add(const Duration(days: 1));
   }
   return scheduledDate;
+}
+
+tz.TZDateTime _getDatebyDayList(List day, tz.TZDateTime schedule) {
+  if (day[0] == true) {
+    while (schedule.weekday != DateTime.monday) {
+      schedule = schedule.add(const Duration(days: 1));
+    }
+    day[0] = false;
+    return schedule;
+  }
+  if (day[1] == true) {
+    while (schedule.weekday != DateTime.tuesday) {
+      schedule = schedule.add(const Duration(days: 1));
+    }
+    day[1] = false;
+    return schedule;
+  }
+  if (day[2] == true) {
+    while (schedule.weekday != DateTime.wednesday) {
+      schedule = schedule.add(const Duration(days: 1));
+    }
+    day[2] = false;
+    return schedule;
+  }
+  if (day[3] == true) {
+    while (schedule.weekday != DateTime.thursday) {
+      schedule = schedule.add(const Duration(days: 1));
+    }
+    day[3] = false;
+    return schedule;
+  }
+  if (day[4] == true) {
+    while (schedule.weekday != DateTime.friday) {
+      schedule = schedule.add(const Duration(days: 1));
+    }
+    day[4] = false;
+    return schedule;
+  }
+  if (day[5] == true) {
+    while (schedule.weekday != DateTime.saturday) {
+      schedule = schedule.add(const Duration(days: 1));
+    }
+    day[5] = false;
+    return schedule;
+  }
+  if (day[6] == true) {
+    while (schedule.weekday != DateTime.sunday) {
+      schedule = schedule.add(const Duration(days: 1));
+    }
+    day[6] = false;
+    return schedule;
+  }
+  return null;
 }

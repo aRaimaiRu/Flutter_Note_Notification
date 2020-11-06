@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
+final ckey = new GlobalKey<ComplexDateTimeFieldState>();
+
 class Notfication_optionlist extends StatefulWidget {
   Notfication_optionlist({Key key}) : super(key: key);
 
@@ -38,7 +40,9 @@ class Notfication_optionlistState extends State<Notfication_optionlist> {
       child: ListView(
         children: <Widget>[
           Container(child: my_widget()),
-          ComplexDateTimeField(),
+          ComplexDateTimeField(
+            ckey: ckey,
+          ),
         ],
       ),
     );
@@ -46,71 +50,66 @@ class Notfication_optionlistState extends State<Notfication_optionlist> {
 }
 
 class ComplexDateTimeField extends StatefulWidget {
+  ComplexDateTimeField({Key ckey}) : super(key: ckey);
   @override
-  _ComplexDateTimeFieldState createState() => _ComplexDateTimeFieldState();
+  ComplexDateTimeFieldState createState() => ComplexDateTimeFieldState();
 }
 
-class _ComplexDateTimeFieldState extends State<ComplexDateTimeField> {
+class ComplexDateTimeFieldState extends State<ComplexDateTimeField> {
   DateTime initialValue = DateTime.now();
 
-  bool isSun = false;
-  bool isMon = false;
-  bool isTue = false;
-  bool isWed = false;
-  bool isThr = false;
-  bool isFri = false;
-  bool isSat = false;
+  List dayList = [false, false, false, false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       CheckboxListTile(
-        title: Text('Sunday'),
-        value: isSun,
-        onChanged: (value) {
-          setState(() => isSun = value);
-        },
-      ),
-      CheckboxListTile(
         title: Text('Monday'),
-        value: isMon,
+        value: dayList[0],
         onChanged: (value) {
-          setState(() => isMon = value);
+          setState(() => dayList[0] = value);
         },
       ),
       CheckboxListTile(
         title: Text('Tuesday'),
-        value: isTue,
+        value: dayList[1],
         onChanged: (value) {
-          setState(() => isTue = value);
+          setState(() => dayList[1] = value);
         },
       ),
       CheckboxListTile(
         title: Text('Wednesday'),
-        value: isWed,
+        value: dayList[2],
         onChanged: (value) {
-          setState(() => isWed = value);
+          setState(() => dayList[2] = value);
         },
       ),
       CheckboxListTile(
         title: Text('Thrusday'),
-        value: isThr,
+        value: dayList[3],
         onChanged: (value) {
-          setState(() => isThr = value);
+          setState(() => dayList[3] = value);
         },
       ),
       CheckboxListTile(
         title: Text('Friday'),
-        value: isFri,
+        value: dayList[4],
         onChanged: (value) {
-          setState(() => isFri = value);
+          setState(() => dayList[4] = value);
         },
       ),
       CheckboxListTile(
         title: Text('Saturday'),
-        value: isSat,
+        value: dayList[5],
         onChanged: (value) {
-          setState(() => isSat = value);
+          setState(() => dayList[5] = value);
+        },
+      ),
+      CheckboxListTile(
+        title: Text('Sunday'),
+        value: dayList[6],
+        onChanged: (value) {
+          setState(() => dayList[6] = value);
         },
       ),
     ]);
