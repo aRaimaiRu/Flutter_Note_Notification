@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:intl/intl.dart';
+// import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+// import 'package:intl/intl.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 class Notfication_optionlist extends StatefulWidget {
+  Notfication_optionlist({Key key}) : super(key: key);
+
   @override
-  _Notfication_optionlistState createState() => _Notfication_optionlistState();
+  Notfication_optionlistState createState() => Notfication_optionlistState();
 }
 
-class _Notfication_optionlistState extends State<Notfication_optionlist> {
+class Notfication_optionlistState extends State<Notfication_optionlist> {
   // final _formKey = GlobalKey<FormState>();
   DateTime initialValue = DateTime.now();
+  DateTime get timevalue => initialValue;
 
   Widget my_widget() {
     return new TimePickerSpinner(

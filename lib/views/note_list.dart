@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simplenoti/Localnotification/Localnotification.dart';
 // import 'package:simplenoti/inherited_widget/note_inherited_widget.dart';
 import 'package:simplenoti/provider/provider.dart';
 import 'note.dart';
@@ -16,6 +17,14 @@ class _NoteListState extends State<NoteList> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Notes"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add_alert),
+            onPressed: () async {
+              await checkPendingNotificationRequests(context);
+            },
+          )
+        ],
       ),
       body: FutureBuilder<Object>(
           future: NoteProvider.getNoteList(),

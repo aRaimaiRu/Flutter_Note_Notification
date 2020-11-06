@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 // import 'package:simplenoti/inherited_widget/note_inherited_widget.dart';
 import 'package:simplenoti/provider/provider.dart';
 import 'schedule_option.dart';
+import 'package:simplenoti/Localnotification/Localnotification.dart';
 
 enum NoteMode { Editing, Adding }
+final key = new GlobalKey<Notfication_optionlistState>();
 
 class Note extends StatefulWidget {
   final NoteMode noteMode;
   final Map<String, dynamic> note;
+
   Note(this.noteMode, this.note);
 
   @override
@@ -17,6 +20,7 @@ class Note extends StatefulWidget {
 class _NoteState extends State<Note> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
+
   bool isSun = false;
 
   // List<Map<String, String>> get _notes => NoteInheritedWidget.of(context).notes;
@@ -60,10 +64,15 @@ class _NoteState extends State<Note> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _NoteButton("Save", Colors.amberAccent, () {
+                _NoteButton("Save", Colors.amberAccent, () async {
                   final title = _titleController.text;
                   final text = _textController.text;
 
+                  ///how to get time?
+                  print(
+                      "key.currentState.timevalue = ${key.currentState.timevalue}");
+                  NextHourAndMin(key.currentState.timevalue.hour,
+                      key.currentState.timevalue.minute, title, text);
                   if (widget.noteMode == NoteMode.Adding) {
                     NoteProvider.insertNote({'title': title, 'text': text});
                   } else if (widget.noteMode == NoteMode.Editing) {
@@ -84,7 +93,9 @@ class _NoteState extends State<Note> {
               ],
             ),
             Text("Notfication"),
-            Notfication_optionlist(),
+            Notfication_optionlist(
+              key: key,
+            ),
           ],
         ),
       ),
