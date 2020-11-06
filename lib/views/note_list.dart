@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simplenoti/Localnotification/Localnotification.dart';
+import 'package:simplenoti/Localnotification/Showpending.dart';
 // import 'package:simplenoti/inherited_widget/note_inherited_widget.dart';
 import 'package:simplenoti/provider/provider.dart';
 import 'note.dart';

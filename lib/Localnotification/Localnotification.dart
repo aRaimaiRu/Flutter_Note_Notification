@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -36,7 +35,7 @@ Future<void> NextHourAndMin(
   final List<PendingNotificationRequest> pendingNotificationRequests =
       await flutterLocalNotificationsPlugin.pendingNotificationRequests();
   await flutterLocalNotificationsPlugin.zonedSchedule(
-    pendingNotificationRequests.length,
+    schedule.hashCode,
     '${title}',
     '${body}',
     schedule,
@@ -71,30 +70,4 @@ tz.TZDateTime nextInstanceOfanytime(int hour, int min) {
     scheduledDate = scheduledDate.add(const Duration(days: 1));
   }
   return scheduledDate;
-}
-
-//show pending noti
-Future<void> checkPendingNotificationRequests(context) async {
-  final List<PendingNotificationRequest> pendingNotificationRequests =
-      await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-  String text;
-  for (var i in pendingNotificationRequests) {
-    print("${i.id} ${i.title} ${i.payload}\n");
-  }
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) => AlertDialog(
-      content:
-          Text('${pendingNotificationRequests.length} pending notification '
-              'requests ${text} '),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    ),
-  );
 }
