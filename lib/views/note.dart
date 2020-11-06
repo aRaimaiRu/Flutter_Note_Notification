@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:simplenoti/inherited_widget/note_inherited_widget.dart';
 import 'package:simplenoti/provider/provider.dart';
 import 'schedule_option.dart';
 import 'package:simplenoti/Localnotification/Localnotification.dart';
@@ -20,8 +19,9 @@ class Note extends StatefulWidget {
 class _NoteState extends State<Note> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
+  List myday = [false, false, false, false, false, false, false];
 
-  // List<Map<String, String>> get _notes => NoteInheritedWidget.of(context).notes;
+
 
   @override
   void didChangeDependencies() {
@@ -35,8 +35,20 @@ class _NoteState extends State<Note> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> displayList = [];
     //Size size = MediaQuery.of(context).size;
-
+    for (int i = 0; i < myday.length; i++) {
+      displayList.add(FlatButton(
+        color: myday[i] ? Colors.blueAccent : Colors.grey,
+        onPressed: () {
+          setState(() {
+            myday[i] = !myday[i];
+        
+          });
+        },
+        child: Text("${indexToDay[i + 1]}"),
+      ));
+    }
     return Scaffold(
       appBar: AppBar(
         title:
@@ -46,6 +58,9 @@ class _NoteState extends State<Note> {
         padding: const EdgeInsets.all(8),
         child: Column(
           children: <Widget>[
+            Notfication_optionlist(
+              key: key,
+            ),
             TextField(
               controller: _titleController,
               decoration: InputDecoration(hintText: 'Note title'),
@@ -67,11 +82,10 @@ class _NoteState extends State<Note> {
                   final text = _textController.text;
                   int hour = key.currentState.timevalue.hour;
                   int min = key.currentState.timevalue.minute;
-                  List dayList = ckey.currentState.dayList;
 
-                  if (dayList.contains(true)) {
+                  if (myday.contains(true)) {
                     scheduleWeeklyAnyDayTimeNotification(
-                        dayList, hour, min, title, text);
+                        myday, hour, min, title, text);
                   } else {
                     NextHourAndMin(hour, min, title, text);
                   }
@@ -97,9 +111,9 @@ class _NoteState extends State<Note> {
                 }),
               ],
             ),
-            Text("Notfication"),
-            Notfication_optionlist(
-              key: key,
+            Text("Notfication every"),
+            Wrap(
+              children: displayList,
             ),
           ],
         ),

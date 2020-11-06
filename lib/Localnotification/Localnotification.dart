@@ -5,16 +5,7 @@ import 'package:timezone/timezone.dart' as tz;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-List indexToDay = [
-  null,
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thrusday",
-  "Friday",
-  "Saturday",
-  "Sunday"
-];
+List indexToDay = [null, "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"];
 Future<void> scheduleWeeklyAnyDayTimeNotification(
     List day, int hour, int min, String title, String text) async {
   tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
