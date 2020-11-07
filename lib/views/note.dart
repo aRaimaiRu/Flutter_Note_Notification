@@ -20,8 +20,7 @@ class _NoteState extends State<Note> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
   List myday = [false, false, false, false, false, false, false];
-
-
+  bool onetime = false;
 
   @override
   void didChangeDependencies() {
@@ -43,7 +42,6 @@ class _NoteState extends State<Note> {
         onPressed: () {
           setState(() {
             myday[i] = !myday[i];
-        
           });
         },
         child: Text("${indexToDay[i + 1]}"),
@@ -86,7 +84,8 @@ class _NoteState extends State<Note> {
                   if (myday.contains(true)) {
                     scheduleWeeklyAnyDayTimeNotification(
                         myday, hour, min, title, text);
-                  } else {
+                  }
+                  if (onetime) {
                     NextHourAndMin(hour, min, title, text);
                   }
                   if (widget.noteMode == NoteMode.Adding) {
@@ -111,7 +110,25 @@ class _NoteState extends State<Note> {
                 }),
               ],
             ),
-            Text("Notfication every"),
+            Text("Notfication"),
+            FlatButton(
+              color: onetime ? Colors.blueAccent : Colors.grey,
+              onPressed: () {
+                setState(() {
+                  onetime = !onetime;
+                });
+              },
+              child: Text("Next Time"),
+            ),
+            FlatButton(
+              color: onetime ? Colors.blueAccent : Colors.grey,
+              onPressed: () {
+                setState(() {
+                  onetime = !onetime;
+                });
+              },
+              child: Text("Next Time"),
+            ),
             Wrap(
               children: displayList,
             ),
