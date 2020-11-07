@@ -6,6 +6,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 List indexToDay = [null, "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"];
+
 Future<void> scheduleWeeklyAnyDayTimeNotification(
     List day, int hour, int min, String title, String text) async {
   tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
@@ -29,7 +30,7 @@ Future<void> scheduleWeeklyAnyDayTimeNotification(
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-        payload: "schedule every :" +
+        payload: "every :" +
             indexToDay[schedule.weekday] +
             schedule.hour.toString() +
             ":" +
@@ -37,9 +38,10 @@ Future<void> scheduleWeeklyAnyDayTimeNotification(
   }
 }
 
-Future<void> NextHourAndMin(
-    int hour, int min, String title, String body) async {
-  tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
+Future<void> NextHourAndMin(tz.TZDateTime nextdatetime, int hour, int min,
+    String title, String body) async {
+  tz.TZDateTime schedule = nextdatetime;
+  // tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
   await flutterLocalNotificationsPlugin.zonedSchedule(
     schedule.hashCode,
     '${title}',
@@ -58,16 +60,16 @@ Future<void> NextHourAndMin(
   );
 }
 
-//Any day and hour
-tz.TZDateTime nextInstanceDayAndHour(int day, int hour, int min) {
-  tz.TZDateTime scheduledDate = nextInstanceOfanytime(hour, min);
-  while (scheduledDate.weekday != day) {
-    scheduledDate = scheduledDate.add(const Duration(days: 1));
-  }
-  scheduledDate = scheduledDate.add(Duration(minutes: 18));
-  print("scheduledDate = $scheduledDate");
-  return scheduledDate;
-}
+// //Any day and hour
+// tz.TZDateTime nextInstanceDayAndHour(int day, int hour, int min) {
+//   tz.TZDateTime scheduledDate = nextInstanceOfanytime(hour, min);
+//   while (scheduledDate.weekday != day) {
+//     scheduledDate = scheduledDate.add(const Duration(days: 1));
+//   }
+//   scheduledDate = scheduledDate.add(Duration(minutes: 18));
+//   print("scheduledDate = $scheduledDate");
+//   return scheduledDate;
+// }
 
 //any time
 tz.TZDateTime nextInstanceOfanytime(int hour, int min) {
