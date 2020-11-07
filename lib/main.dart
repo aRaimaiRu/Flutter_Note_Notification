@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:simplenoti/views/note_list.dart';
-import 'package:simplenoti/inherited_widget/note_inherited_widget.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -42,11 +41,9 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return NoteInheritedWidget(
-      child: MaterialApp(
-        title: 'Notes',
-        home: NoteList(),
-      ),
+    return MaterialApp(
+      title: 'Notes',
+      home: NoteList(),
     );
   }
 }
