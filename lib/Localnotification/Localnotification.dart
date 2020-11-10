@@ -8,7 +8,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 List indexToDay = [null, "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"];
 
 Future<void> scheduleWeeklyAnyDayTimeNotification(
-    List day, int hour, int min, String title, String text) async {
+    List day, int hour, int min, String title, String text, int noteid) async {
   tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
   for (int i = 0; i < day.where((item) => item == false).length; i++) {
     schedule = _getDatebyDayList(day, schedule);
@@ -34,12 +34,14 @@ Future<void> scheduleWeeklyAnyDayTimeNotification(
             indexToDay[schedule.weekday] +
             schedule.hour.toString() +
             ":" +
-            schedule.minute.toString());
+            schedule.minute.toString() +
+            " " +
+            noteid.toString());
   }
 }
 
 Future<void> NextHourAndMin(tz.TZDateTime nextdatetime, int hour, int min,
-    String title, String body) async {
+    String title, String body, int noteid) async {
   tz.TZDateTime schedule = nextdatetime;
   // tz.TZDateTime schedule = nextInstanceOfanytime(hour, min);
   await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -56,7 +58,13 @@ Future<void> NextHourAndMin(tz.TZDateTime nextdatetime, int hour, int min,
     androidAllowWhileIdle: true,
     uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime,
-    payload: schedule.toString(),
+    payload: "next  :" +
+        indexToDay[schedule.weekday] +
+        schedule.hour.toString() +
+        ":" +
+        schedule.minute.toString() +
+        " " +
+        noteid.toString(),
   );
 }
 

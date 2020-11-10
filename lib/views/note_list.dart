@@ -1,19 +1,48 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simplenoti/Localnotification/Showpending.dart';
-// import 'package:simplenoti/inherited_widget/note_inherited_widget.dart';
 import 'package:simplenoti/provider/provider.dart';
 import 'note.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NoteList extends StatefulWidget {
+  final NotificationAppLaunchDetails notificationAppLaunchDetails;
+  bool firstlaunch = true;
+  bool get didNotificationLaunchApp =>
+      notificationAppLaunchDetails?.didNotificationLaunchApp ?? false;
+  NoteList(this.notificationAppLaunchDetails);
   @override
   _NoteListState createState() => _NoteListState();
 }
 
 class _NoteListState extends State<NoteList> {
-  // List<Map<String, String>> get _notes => NoteInheritedWidget.of(context).notes;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void mylaunchnavigator(BuildContext context, int id) async {
+    List<Map<String, dynamic>> testnote = await NoteProvider.getNote(id);
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Note(NoteMode.Editing, testnote[0])));
+  }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.didNotificationLaunchApp && widget.firstlaunch) {
+        await mylaunchnavigator(
+            context,
+            int.parse(
+                widget.notificationAppLaunchDetails.payload.split(" ").last));
+        widget.firstlaunch = false;
+        setState(() {});
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Notes"),

@@ -9,7 +9,7 @@ enum NoteMode { Editing, Adding }
 
 class Note extends StatefulWidget {
   final NoteMode noteMode;
-  final Map<String, dynamic> note;
+  Map<String, dynamic> note;
 
   Note(this.noteMode, this.note);
 
@@ -24,6 +24,7 @@ class _NoteState extends State<Note> {
   bool onetime = false;
   bool everymonth = false;
   tz.TZDateTime myDateTime;
+  int mynoteid;
 
   @override
   void didChangeDependencies() {
@@ -38,7 +39,6 @@ class _NoteState extends State<Note> {
   @override
   Widget build(BuildContext context) {
     List<Widget> displayList = [];
-    //Size size = MediaQuery.of(context).size;
     for (int i = 0; i < myday.length; i++) {
       displayList.add(FlatButton(
         color: myday[i] ? Colors.blueAccent : Colors.grey,
@@ -81,26 +81,36 @@ class _NoteState extends State<Note> {
                   final title = _titleController.text;
                   final text = _textController.text;
 
-                  if (myDateTime != null) {
-                    if (myday.contains(true)) {
-                      scheduleWeeklyAnyDayTimeNotification(myday,
-                          myDateTime.hour, myDateTime.minute, title, text);
-                    }
-                    if (onetime &&
-                        myDateTime.isAfter(tz.TZDateTime.now(tz.local))) {
-                      NextHourAndMin(myDateTime, myDateTime.hour,
-                          myDateTime.minute, title, text);
-                    }
-                  }
-
                   if (widget.noteMode == NoteMode.Adding) {
-                    NoteProvider.insertNote({'title': title, 'text': text});
+                    mynoteid = await NoteProvider.insertNote(
+                        {'title': title, 'text': text});
                   } else if (widget.noteMode == NoteMode.Editing) {
                     NoteProvider.updateNote({
                       'id': widget.note['id'],
                       'title': _titleController.text,
                       'text': _textController.text
                     });
+                  }
+                  if (myDateTime != null) {
+                    if (myday.contains(true)) {
+                      scheduleWeeklyAnyDayTimeNotification(
+                          myday,
+                          myDateTime.hour,
+                          myDateTime.minute,
+                          title,
+                          text,
+                          (mynoteid == null) ? widget.note['id'] : mynoteid);
+                    }
+                    if (onetime &&
+                        myDateTime.isAfter(tz.TZDateTime.now(tz.local))) {
+                      NextHourAndMin(
+                          myDateTime,
+                          myDateTime.hour,
+                          myDateTime.minute,
+                          title,
+                          text,
+                          (mynoteid == null) ? widget.note['id'] : mynoteid);
+                    }
                   }
 
                   Navigator.pop(context);

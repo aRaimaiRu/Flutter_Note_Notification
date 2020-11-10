@@ -25,8 +25,15 @@ class NoteProvider {
     return await db.query('Notes');
   }
 
-  static Future insertNote(Map<String, dynamic> note) async {
-    await db.insert('Notes', note);
+  static Future<List<Map<String, dynamic>>> getNote(int id) async {
+    if (db == null) {
+      await open();
+    }
+    return await db.query('Notes', where: 'id = ?', whereArgs: [id]);
+  }
+
+  static Future<int> insertNote(Map<String, dynamic> note) async {
+    return db.insert('Notes', note);
   }
 
   static Future updateNote(Map<String, dynamic> note) async {

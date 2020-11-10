@@ -45,7 +45,8 @@ class _setupAlertDialogState extends State<setupAlertDialog> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             title: Text("${mylist[index].title}"),
-            subtitle: Text("${mylist[index].payload}"),
+            subtitle:
+                Text("${mylist[index].payload.toString().substring(0, 15)}"),
             trailing: IconButton(
               icon: Icon(Icons.delete_forever),
               onPressed: () async {

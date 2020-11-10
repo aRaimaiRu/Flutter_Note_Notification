@@ -28,6 +28,9 @@ void main() async {
     android: initializationSettingsAndroid,
     iOS: initializationSettingsIOS,
   );
+  final NotificationAppLaunchDetails notificationAppLaunchDetails =
+      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  debugPrint("notificationAppLaunchDetails = ${notificationAppLaunchDetails}");
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: (String payload) async {
     if (payload != null) {
@@ -35,15 +38,18 @@ void main() async {
     }
   });
 
-  runApp(MyApp());
+  runApp(MaterialApp(
+    title: 'Notes',
+    home: NoteList(notificationAppLaunchDetails),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Notes',
-      home: NoteList(),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Notes',
+//       home: NoteList(),
+//     );
+//   }
+// }
